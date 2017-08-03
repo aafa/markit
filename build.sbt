@@ -14,6 +14,7 @@ lazy val root = project
       "com.lihaoyi" %%% "scalatags" % "0.6.5",
       "com.github.tototoshi" %% "scala-csv" % "1.3.4",
       "org.scalaj" %% "scalaj-http" % "2.3.0",
+      "co.fs2" %%% "fs2-core" % "0.9.6",
       "org.scalatest" %% "scalatest" % "3.0.1" % "test"
     ),
     scalaJSUseMainModuleInitializer := true
