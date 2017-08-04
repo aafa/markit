@@ -1,6 +1,6 @@
 lazy val root = project
   .in(file("."))
-  .enablePlugins(ScalaJSPlugin)
+  .enablePlugins(ScalaJSPlugin, WorkbenchPlugin)
   .settings(
     inThisBuild(
       List(
@@ -12,9 +12,10 @@ lazy val root = project
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.2",
       "com.lihaoyi" %%% "scalatags" % "0.6.5",
-      "com.github.tototoshi" %% "scala-csv" % "1.3.4",
-      "org.scalaj" %% "scalaj-http" % "2.3.0",
+
+      "fr.hmil" %%% "roshttp" % "2.0.2",
       "co.fs2" %%% "fs2-core" % "0.9.6",
+
       "org.scalatest" %% "scalatest" % "3.0.1" % "test"
     ),
     scalaJSUseMainModuleInitializer := true
@@ -34,3 +35,7 @@ resourceGenerators in Compile += Def.task {
 
   Seq(target)
 }.taskValue
+
+fullOptJS in Compile += Def.task{
+  // todo move index.html + js script into `root`
+}
