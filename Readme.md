@@ -1,4 +1,4 @@
-#### Task
+### Task
  
 __Prerequisites__
 Get the csv stock daily data for the past year. 
@@ -19,6 +19,19 @@ Write Scala functions that will return, feel free to adapt function signatures, 
 
 ```
  
-#### Objectives
+### Objectives
 - solve the problem in an elegant and effective FP way 
-- make fun along the way, use Scala.js, try something new with it   
+- make fun along the way, use Scala.js, try something new with it
+
+### Work process
+Initially I thought of doing simple `scala.js` ui in top of this solution for demo purposes.
+But it turns out to be a significant ~~pain in the a~~ frustration to force this thing to work. `CORS` issue is the one in particular.   
+Due to time constraints I decided to skip this ui part and roll out CLI solution as it suffice to demonstrate working prototype.  
+
+`fs2` streams has been used to accommodate for possible large data amounts in a reliable and fp-pure fashion. 
+
+### Test and Run
+
+- `sbt test`  runs all the tests
+- `sbt run`   executes queries for `GOOG` ticket
+
