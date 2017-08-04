@@ -1,7 +1,6 @@
 import org.scalatest.{FunSpecLike, MustMatchers}
 
-import scala.concurrent.Future
-import scala.concurrent.duration._
+import Helpers._
 
 trait TestHelpers { this: ProcessData =>
   def testDailyPrices: Vector[Double] = dailyPrices("").runLog.unsafeValue().get
@@ -18,12 +17,7 @@ class TestProcessData extends ProcessData with TestHelpers {
 class TickerSpec extends FunSpecLike with MustMatchers {
   val tdp = new TestProcessData
 
-  implicit class ReachFuture[A](f: Future[A]) {
-    import scala.concurrent.Await
-    def get: A = Await.result(f, 5.seconds)
-  }
-
-  it("should parse csv and pick on prices") {
+  it("should parse csv") {
     new ProcessData with TestCsvData {
       private val csv = csvString("").get
 
@@ -33,17 +27,6 @@ class TickerSpec extends FunSpecLike with MustMatchers {
       csv.lines.drop(2).next() must ===(
         "2-Aug-17,928.61,932.60,916.68,930.39,1824448")
 
-    }
-  }
-
-  it("should get values async") {
-    new ProcessData with TestCsvData {
-      pending
-      val prices: Vector[Double] =
-        dailyPrices("").runLog.unsafeRunAsyncFuture().get
-      prices.size must ===(14)
-      prices.head must ===(772.08)
-      prices.last must ===(771.61)
     }
   }
 

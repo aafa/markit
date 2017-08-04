@@ -1,11 +1,9 @@
 import fr.hmil.roshttp.HttpRequest
-import fs2.{Stream, _}
+import fs2._
 import monix.execution.Scheduler.Implicits.global
-import org.scalajs.dom.ext.Ajax
-
 import scala.collection.mutable
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
+import scala.concurrent.Future
+import Helpers._
 
 case class TicketData(date: String,
                       open: Double,
@@ -18,23 +16,22 @@ case class TicketMinimalData(date: String, close: Double) {
 }
 
 abstract class ProcessData {
+  implicit lazy val strategy: Strategy = Strategy.fromExecutionContext(
+    scala.concurrent.ExecutionContext.Implicits.global)
+
   type Result[T] = Stream[Task, T]
-  implicit val strategy = Strategy.default
   val memo = new mutable.HashMap[String, Result[TicketMinimalData]]
 
   def pricesURL(ticker: String): String = {
     s"https://www.google.com/finance/historical?output=csv&q=$ticker"
   }
 
-//  def csvString(ticker: String): Future[String] = HttpRequest(pricesURL(ticker)).get().map(_.body)
-  def csvString(ticker: String): Future[String] = {
-    println(s"fetching from ${pricesURL(ticker)}")
-    Ajax.get(pricesURL(ticker)).map(_.response.toString)
-  }
+  def csvString(ticker: String): Future[String] =
+    HttpRequest(pricesURL(ticker)).get().map(_.body)
 
-  // we are passing sync request here to simplify things
   def query(ticker: String): Result[TicketMinimalData] = {
-    val fs2Stream: Result[TicketMinimalData] = Stream.eval(Task.fromFuture(csvString(ticker)))
+    def fs2Stream: Result[TicketMinimalData] = Stream
+      .eval(Task.fromFuture(csvString(ticker)))
       .through(text.lines)
       .drop(1) // skip headers
       .map(s => s.split(",").toList)
@@ -71,8 +68,11 @@ abstract class ProcessData {
   }
 }
 
-//object Main extends App {
-//  private val result = new ProcessData {}.query("GOOG")
-//  private val value = Await.result(new ProcessData {}.csvString("GOOG"), 10.seconds)
-//  println(value)
-//}
+object Main extends App {
+  println(">>> dailyPrices for GOOG")
+  println(new ProcessData {}.dailyPrices("GOOG").runLog.unsafeRunAsyncFuture().get)
+  println(">>> returns for GOOG")
+  println(new ProcessData {}.returns("GOOG").runLog.unsafeRunAsyncFuture().get)
+  println(">>> meanReturn for GOOG")
+  println(new ProcessData {}.meanReturn("GOOG").runLog.unsafeRunAsyncFuture().get.head)
+}
