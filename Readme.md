@@ -42,4 +42,4 @@ Due to time constraints I decided to skip this ui part and roll out CLI solution
 
 __TODO:__  
 - make a persistent storage to keep all that data out of the memory and stream-read from there  (initially I haven't plan on doing that since I wasn't sure how to handle this in a `scala.js` context)
-- optimize data fetching to skip fetching data that were already been fetched (since data is historical we are safe to assume it is immutable)  
+- optimize data fetching to skip already fetched parts (since data is historical we are safe to assume it is immutable)  
