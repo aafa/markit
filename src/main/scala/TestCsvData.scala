@@ -1,8 +1,5 @@
 import Helpers._
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
 trait TestCsvData { this: ProcessData =>
 
   override def csvLines(s:String): Result[String] =
