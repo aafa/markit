@@ -1,10 +1,12 @@
+import Helpers._
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 trait TestCsvData { this: ProcessData =>
 
-  override def csvString(s:String) =
-    Future {
+  override def csvLines(s:String): Result[String] =
+    fs2.Stream.emits {
       """Date,Open,High,Low,Close,Volume
         |3-Aug-17,930.34,932.24,922.24,923.65,1202512
         |2-Aug-17,928.61,932.60,916.68,930.39,1824448
@@ -257,6 +259,6 @@ trait TestCsvData { this: ProcessData =>
         |9-Aug-16,781.10,788.94,780.57,784.26,1318894
         |8-Aug-16,782.00,782.63,778.09,781.76,1107857
         |5-Aug-16,773.78,783.04,772.34,782.22,1801205
-      """.stripMargin
+      """.stripMargin.split("\n")
     }
 }

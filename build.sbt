@@ -9,9 +9,7 @@ lazy val root = project
       )),
     name := "markit",
     libraryDependencies ++= Seq(
-      "fr.hmil" %% "roshttp" % "2.0.2",
       "co.fs2" %% "fs2-core" % "0.9.6",
-
       "org.scalatest" %% "scalatest" % "3.0.1" % "test"
     )
   )

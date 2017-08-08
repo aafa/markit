@@ -28,18 +28,11 @@ Initially I thought of doing simple `scala.js` ui in top of this solution for de
 But it turns out to be a significant ~~pain in the a~~ frustration to force this thing to work. `CORS` issue is the one in particular.   
 Due to time constraints I decided to skip this ui part and roll out CLI solution as it suffice to demonstrate working prototype.  
 
-`fs2` streams has been used to accommodate for possible large data amounts in a reliable and fp-pure fashion. 
+`fs2` streams has been used to accommodate for possible large data amounts in a reliable and fp-pure fashion.
+
+As the result we have `end-to-end` streaming pipeline that is well ready to process data of any size.  
 
 ### Test and Run
 
 - `sbt test`  runs all the tests
-- `sbt run`   executes queries for `GOOG` ticket
-
-### Known issues and todos
-`val memo = new mutable.HashMap[String, Result[TicketMinimalData]]`  that has been used to cache http responses doesn't look very nice and is a big off of this picture but I feel that we need to have some sort of caching here cause 
-- data that is queried is Day-aggregated.  Meaning that we have an update only next day.
-- we have several sinks that relying on that data and we need to keep it somewhere to free ourselves from requesting it over and over again
-
-__TODO:__  
-- make a persistent storage to keep all that data out of the memory and stream-read from there  (initially I haven't plan on doing that since I wasn't sure how to handle this in a `scala.js` context)
-- optimize data fetching to skip already fetched parts (since data is historical we are safe to assume it is immutable)  
+- `sbt "run MSN"`   executes queries for `MSN` ticket
